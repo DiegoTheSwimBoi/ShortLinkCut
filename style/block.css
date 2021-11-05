@@ -1,0 +1,20 @@
+.answer{
+    margin-top: -120px;
+}
+
+.answer>h1{
+    text-align: center;
+    font-size: 60px;
+}
+
+
+.answers{
+    background-color: black;
+    margin-top: 120px;
+    font-size: 30px;
+}
+
+.answers>section{
+    margin-left: 20px;
+}
+

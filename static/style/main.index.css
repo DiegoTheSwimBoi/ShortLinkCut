@@ -1,0 +1,50 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: url(../skybrighter.png);
+    background-repeat: no-repeat;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    text-shadow: 0 2px 5px black;
+}
+
+.header{
+    margin-top: 200px;
+}
+
+.header-items,.footer-items{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+    font-size: 32px;
+    font-weight: 300;
+}
+
+.wrap{
+    margin-top: 200px;
+}
+.wrap>*,.footer-title{
+    text-align: center;
+}
+
+.footer-title{
+    font-size: 30px;
+    font-weight: 300;
+}
+
+.footer-items{
+    margin-top: 50px;
+}
+
+.footer{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
