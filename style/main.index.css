@@ -4,8 +4,7 @@
 }
 
 body{
-    background: url(../static/skybrighter.png);
-    background-repeat: no-repeat;
+    background: linear-gradient(#e66465, #9198e5);
     font-family: 'Courier New', Courier, monospace;
     color: white;
     text-shadow: 0 2px 5px black;
@@ -24,7 +23,7 @@ a{
     text-decoration: none;
     color: white;
     font-size: 32px;
-    font-weight: 300;
+    font-weight: 700;
 }
 
 .wrap{
@@ -32,6 +31,10 @@ a{
 }
 .wrap>*,.footer-title{
     text-align: center;
+}
+
+.wrap>a{
+    font-size: 48px;
 }
 
 .footer-title{

@@ -34,6 +34,15 @@ a{
     text-align: center;
 }
 
+.wrap>a{
+    display:flex;
+    justify-content: center;
+    font-size: 24px;
+    margin-top: 70px;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
 .footer-title{
     font-size: 30px;
     font-weight: 300;
@@ -48,3 +57,42 @@ a{
     position: fixed;
     bottom: 0;
 }
+
+
+.proto{
+    margin-top: -30px;
+}
+
+.proto>label{
+    font-size: 28px;
+}
+
+.url{
+    font-size: 28px;
+    width: 50%;
+}
+
+.btn-url{
+    font-size: 28px;
+    width: 10%;
+}
+
+
+.links{
+    display:flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#myInput{
+    background: none;
+    border: none;
+    color: aliceblue;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    text-shadow: 0 2px 5px black;
+}
+
+
+

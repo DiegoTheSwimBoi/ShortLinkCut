@@ -4,30 +4,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css"  rel="stylesheet" href="../style/main.index.css">
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link type="text/css"  rel="stylesheet" href="{{url_for('static', filename='style/main.index.css')}}">
     <title>ShortCut Link</title>
 </head>
 <body>
-
     <div class="header">
         <div class="header-items">
-        <a href="proto.html">Home</a>
-        <a href="auth.html">Auth</a>
-        <a href="answer.html">Q&A</a>
+        <a href="/">Home</a>
+        <a href="/enter">Auth</a>
+        <a href="/answer">Q&A</a>
         </div>
     </div>
     <div class="wrap">
-        <h1>Let's get started</h1>
-    </div>
-    <div class="footer">
-        <div>
-            <p class="footer-title">Find us in</p>
+        <div class="proto">
+            <h1>Введите ссылку:</h1>
+            <form method="post">
+                <label><input type="text" name="url" required class="url"></label> <button class="btn-url">OK</button>
+            </form>
+            
         </div>
-        <div class="footer-items">
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">VK</a>
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Youtube</a>
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">GitHub</a>
-        </div>
+        
     </div>
+    {% if link %}
+    <div class="links">
+        <div class="links-item"><input type="text" value={{link}} id="myInput"><button onclick="myFunction()"><img src="{{url_for('static', filename='copy.png')}}"></button></div>
+    </div>
+    
+    {% endif %}
+
+    <script>
+    function myFunction() {
+  /* Get the text field */
+  var copyText = document.getElementById("myInput");
+
+  /* Select the text field */
+  copyText.select();
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  /* Alert the copied text */
+  alert("Copied the text: " + copyText.value);
+}
+    </script>
 </body>
 </html>

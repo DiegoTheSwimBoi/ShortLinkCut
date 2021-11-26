@@ -1,6 +1,8 @@
+import os
 import bd
 import shorteners as shortURL
 from flask import Flask,request,render_template, session,url_for,redirect,jsonify
+import werkzeug
 
 
 
@@ -10,9 +12,39 @@ app.secret_key="session_start"
 def hello_world():
     return render_template("index.html")
 
+@app.route("/protoShort")
+def ProtoPage():
+    return render_template("proto.html")
+
+@app.route('/protoShort', methods=['POST'])
+def proto():
+    request_data = request.get_json()
+    if request_data:
+        if 'url' in request_data:
+            url = request_data['url']
+
+            print(url)
+
+        if request.method == 'POST':
+            a = request.form.get('url')
+            url=str(a).replace(" ","")
+            if len(url)>8:
+                resp=shortURL.getShortURL(url)
+                if resp:
+                    session["responsed"]= f"{resp}"
+                else: session["responsed"]="К сожалению произошла ошибка. И ссылку не удалось отработать"
+            else: session["responsed"]="Ссылка очень маленькая. Она должна быть больше 8 символов"
+            
+    return render_template("proto.html",link=session["responsed"])
+
+
+
 @app.route("/enter")
 def AuthPage():
-    return render_template("auth.html")
+    AuthErr=""
+    email=""
+    password=""
+    return render_template("auth.html",email=email,password=password,error=AuthErr)
 
 @app.route("/enter",  methods=['POST'])
 def auth():
@@ -28,20 +60,26 @@ def auth():
         email = request.form.get('email')
         password = request.form.get('password')
         hasUser= bd.selectUser(email,password)
-        if hasUser>0:
+        if int(hasUser)>0:
             session["auth"]=True
-            return render_template('start.html')
+            session["id"]=bd.selectUserID(email)
+            return redirect(url_for("DeskPage"))
         else:
             session.pop("auth",None)
-            return render_template('auth.html')
+            AuthErr="Не правильно веден пароль или почта"
+            return render_template('auth.html',email=email,password=password,error=AuthErr)
     else:
         session.pop("auth",None)
-        return render_template('auth.html')
+        AuthErr="Простите. Но произошла ошибка."
+        return render_template('auth.html',email="",password="",error=AuthErr)
 
 
 @app.route("/regin")
 def ReginPage():
-    return render_template("regin.html")
+    ReginErr=""
+    email=""
+    password=""
+    return render_template("regin.html",email=email,password=password,error=ReginErr)
 
 @app.route("/regin",  methods=['POST'])
 def regin():
@@ -55,16 +93,16 @@ def regin():
 
     if request.method == 'POST':
         email = request.form.get('email')
-        password = request.form.get('password')
-        insertUser= bd.insertUser(email,password)
+        password_v = request.form.get('password')
+        password = werkzeug.security.generate_password_hash(password_v, method='pbkdf2:sha256', salt_length=16)
+        insertUser= bd.insertUser(email,password," ")
         print(insertUser)
         if insertUser>0:
             session["auth"]=True
-            return render_template('start.html')
-        else:
-            return render_template('regin.html')
+            return redirect(url_for("DeskPage"))
     else:
-        return render_template('regin.html')
+        ReginErr="Простите. Но произошла ошибка."
+        return render_template('regin.html',email="",password="",error=ReginErr)
 
 
 
@@ -74,16 +112,60 @@ def AnswerPage():
     return render_template("answer.html")
 
 
-@app.route("/response", methods=['POST','GET'])
-def response():
-    s=""
-    if "auth" in session:
-        request_data = request.get_json()
-        if request_data:
-            if 'url' in request_data:
-                url = request_data['url']
+@app.route('/seetings')
+def SettingsPage():
+    nickname=""
+    if "id" in session:
+        nickname=bd.getUserName(session["id"])
+    
+    return render_template("settings.html",nickname=nickname)
 
-                print(url)
+
+@app.route('/seetings', methods=['POST'])
+def changeNick():
+    request_data = request.get_json()
+    if request_data:
+        if 'nick' in request_data:
+            nick = request_data['nick']
+
+    if request.method == 'POST':
+        nick = request.form.get('nick')
+        if "id" in session:
+            bd.updateNick(session["id"],nick)
+            return redirect(url_for("DeskPage"))
+    else:
+        return render_template("settings.html",nickname="")
+
+
+
+@app.route('/desktop')
+def DeskPage():
+    nickname=""
+    if "id" in session and "auth" in session and session["auth"]:
+        nickname=bd.getUserName(session["id"])
+        #print(nickname)
+        return render_template("start.html",nickname=nickname)
+    else: 
+        return redirect(url_for("AuthPage"))
+    
+
+ 
+
+@app.route('/shortlink')
+def ShortPage():
+    if "auth" in session and session["auth"]:
+        return render_template("short.html")
+    else:
+        return redirect(url_for("AuthPage"))
+
+@app.route('/shortlink', methods=['POST'])
+def Page():
+    request_data = request.get_json()
+    if request_data:
+        if 'url' in request_data:
+            url = request_data['url']
+
+            print(url)
 
         if request.method == 'POST':
             a = request.form.get('url')
@@ -95,16 +177,7 @@ def response():
                 else: session["responsed"]="К сожалению произошла ошибка. И ссылку не удалось отработать"
             else: session["responsed"]="Ссылка очень маленькая. Она должна быть больше 8 символов"
             
-            return redirect(f"responsed")
-                
-
-
-
-@app.route('/responsed')
-def responsed():
-    if "responsed" in session:
-        resp=session["responsed"]
-        return f"<h1>{resp}</h1>"
+    return render_template("short.html",link=session["responsed"])
 
 
 if __name__=="__main__":       
