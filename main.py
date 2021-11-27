@@ -18,24 +18,19 @@ def ProtoPage():
 
 @app.route('/protoShort', methods=['POST'])
 def proto():
-    request_data = request.get_json()
-    if request_data:
-        if 'url' in request_data:
-            url = request_data['url']
-
-            print(url)
-
-        if request.method == 'POST':
+    shorty=""
+    if request.method == 'POST':
             a = request.form.get('url')
             url=str(a).replace(" ","")
             if len(url)>8:
                 resp=shortURL.getShortURL(url)
                 if resp:
-                    session["responsed"]= f"{resp}"
-                else: session["responsed"]="К сожалению произошла ошибка. И ссылку не удалось отработать"
-            else: session["responsed"]="Ссылка очень маленькая. Она должна быть больше 8 символов"
+                    shorty= f"{resp}"
+                else: shorty="К сожалению произошла ошибка. И ссылку не удалось отработать"
+            else: shorty="Ссылка очень маленькая. Она должна быть больше 8 символов"
             
-    return render_template("proto.html",link=session["responsed"])
+    return render_template("proto.html",link=shorty)
+    
 
 
 

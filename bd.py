@@ -43,6 +43,24 @@ finally:
 try:
     con = sqlite3.connect('database.db')
     cursor=con.cursor()
+    types = cursor.execute(""" SELECT *  FROM "users" """).fetchall()
+    print(types)
+    if len(types)<4:
+        types_link=['private','public','LMIA']
+        for i in range(len(types_link)):
+            if (types_link[i] not in types[0]):
+                print("Yes")
+            else: print("No")
+    con.commit()
+except sqlite3.Error:
+    print("Err table create")
+finally:
+    con.close()
+
+
+try:
+    con = sqlite3.connect('database.db')
+    cursor=con.cursor()
     cursor.execute("""CREATE TABLE IF NOT EXISTS "types" (
 	    "id"	INTEGER NOT NULL,
 	    "type"	TEXT NOT NULL,
@@ -51,7 +69,7 @@ try:
         """)
     con.commit()
 except sqlite3.Error:
-    print("Err table create")
+    print("Err table insert")
 finally:
     con.close()
 

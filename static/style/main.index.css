@@ -94,5 +94,27 @@ a{
     text-shadow: 0 2px 5px black;
 }
 
+.links{
+    margin-top: 30px;
+}
 
+.links-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#btnLink{
+    background: none;
+    border: none;
+    color: #fff;
+    text-shadow: 0 2px 5px black;
+    font-size: 28px;
+    text-decoration: underline;
+    transition: all ease-in-out 0.5s;
+}
+
+#btnLink:hover{
+    color: rgb(255, 208, 79)
+}
 

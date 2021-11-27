@@ -26,12 +26,14 @@
         </div>
         
     </div>
-    {% if link %}
+    
     <div class="links">
-        <div class="links-item"><input type="text" value={{link}} id="myInput"><button onclick="myFunction()"><img src="{{url_for('static', filename='copy.png')}}"></button></div>
+{% if link %}
+        <div class="links-item"><input type="hidden" value={{link}} id="myInput"><button onclick="myFunction()" id="btnLink">{{link}}</button></div>
+{% endif %}
     </div>
     
-    {% endif %}
+  
 
     <script>
     function myFunction() {
@@ -45,7 +47,7 @@
   document.execCommand("copy");
 
   /* Alert the copied text */
-  alert("Copied the text: " + copyText.value);
+  alert("Ссылка скопирована " + copyText.value);
 }
     </script>
 </body>
