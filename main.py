@@ -6,6 +6,8 @@ import werkzeug
 
 
 
+
+
 app = Flask(__name__,template_folder='templates')
 app.secret_key="session_start"
 @app.route("/")
@@ -136,10 +138,12 @@ def changeNick():
 @app.route('/desktop')
 def DeskPage():
     nickname=""
+    links=False
     if "id" in session and "auth" in session and session["auth"]:
+        links=bd.getLinkByUserId(session["id"])
         nickname=bd.getUserName(session["id"])
         #print(nickname)
-        return render_template("start.html",nickname=nickname)
+        return render_template("start.html",nickname=nickname,linksHas=links)
     else: 
         return redirect(url_for("AuthPage"))
     
@@ -149,30 +153,52 @@ def DeskPage():
 @app.route('/shortlink')
 def ShortPage():
     if "auth" in session and session["auth"]:
-        return render_template("short.html")
+        types=bd.getLinkTypes()
+
+        return render_template("short.html",len=len(types), types=types,res=None,link=None,errors=None)
     else:
         return redirect(url_for("AuthPage"))
 
+
+		
 @app.route('/shortlink', methods=['POST'])
 def Page():
-    request_data = request.get_json()
-    if request_data:
-        if 'url' in request_data:
-            url = request_data['url']
+    shorty=""
+    resText=""
+    error=""
+    types=bd.getLinkTypes()
+    if request.method == 'POST':
+        a = request.form.get('url')
+        type = request.form.get('type')
 
-            print(url)
-
-        if request.method == 'POST':
-            a = request.form.get('url')
-            url=str(a).replace(" ","")
-            if len(url)>8:
-                resp=shortURL.getShortURL(url)
-                if resp:
-                    session["responsed"]= f"{resp}"
-                else: session["responsed"]="К сожалению произошла ошибка. И ссылку не удалось отработать"
-            else: session["responsed"]="Ссылка очень маленькая. Она должна быть больше 8 символов"
+        print(type)
             
-    return render_template("short.html",link=session["responsed"])
+        url=str(a).replace(" ","")
+        if len(url)>8:
+            resp=shortURL.getShortURL(url)
+            if resp:
+                shorty= f"{resp}"
+                resText=f"{resp}" 
+                if bd.hasAlreadyLink(session["id"],url):               
+                    bd.insertLink(session["id"],url,shorty,0,type)
+                if type=="1":
+                    shorty=bytes(range(5))
+                    resText=f"{resp}"
+            else: error="К сожалению произошла ошибка. И ссылку не удалось отработать"
+        else: error="Ссылка очень маленькая. Она должна быть больше 8 символов"
+    return render_template("short.html",len=len(types), types=types,res=resText,link=shorty,errors=error)
+
+
+@app.route('/links')
+def LinksPage():
+    if "auth" in session and session["auth"]:
+        types=bd.getLinkTypes()
+        links=bd.getLinkByUserId(session["id"])
+        return render_template("links.html",len=len(links),links=links,types=types)
+    else:
+        return redirect(url_for("AuthPage"))
+
+
 
 
 if __name__=="__main__":       

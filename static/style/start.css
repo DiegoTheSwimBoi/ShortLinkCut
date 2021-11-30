@@ -28,7 +28,7 @@ a{
 }
 
 
-.wrap{
+.wrap,.links{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,3 +58,12 @@ button{
     background: black;
 }
 
+
+.links{
+    margin-top: 100px;
+}
+
+.links>a{
+    text-decoration: underline;
+    font-weight:700;
+}

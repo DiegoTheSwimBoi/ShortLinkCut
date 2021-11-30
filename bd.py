@@ -1,6 +1,8 @@
-import sqlite3 
+﻿import sqlite3 
 import werkzeug
 
+
+# Создание базы данных и настройки
 try:
     con = sqlite3.connect('database.db')
     cursor=con.cursor()
@@ -40,23 +42,6 @@ finally:
     con.close()
 	
 
-try:
-    con = sqlite3.connect('database.db')
-    cursor=con.cursor()
-    types = cursor.execute(""" SELECT *  FROM "users" """).fetchall()
-    print(types)
-    if len(types)<4:
-        types_link=['private','public','LMIA']
-        for i in range(len(types_link)):
-            if (types_link[i] not in types[0]):
-                print("Yes")
-            else: print("No")
-    con.commit()
-except sqlite3.Error:
-    print("Err table create")
-finally:
-    con.close()
-
 
 try:
     con = sqlite3.connect('database.db')
@@ -73,8 +58,26 @@ except sqlite3.Error:
 finally:
     con.close()
 
-	
 
+try:
+    con = sqlite3.connect('database.db')
+    cursor=con.cursor()
+    types = cursor.execute(""" SELECT "type"  FROM "types" """).fetchall()
+    types_link=['private','public']
+    #print(types)
+    if not types:
+        for i in range(len(types_link)):
+            cursor.execute(""" INSERT INTO "types" (type) VALUES (?)
+            """,(types_link[i],))
+            con.commit()
+except sqlite3.Error:
+    print("Err table insert")
+finally:
+    con.close()
+
+
+	
+# id в лич. кабинете
 def selectUserID(email):
     try:
         con = sqlite3.connect("database.db")
@@ -91,6 +94,8 @@ def selectUserID(email):
     finally:
         con.close() 
 
+
+# Вход в систему
 def selectUser(email,password):
     try:
         con = sqlite3.connect("database.db")
@@ -109,6 +114,8 @@ def selectUser(email,password):
     finally:
         con.close() 
 
+# Получение никнейма. 
+
 def getUserName(id):
     try:
         con = sqlite3.connect("database.db")
@@ -124,6 +131,8 @@ def getUserName(id):
         con.close() 
 
 
+# Обновление никнейма
+
 def updateNick(id,nickname):
     try:
         con = sqlite3.connect("database.db")
@@ -138,6 +147,11 @@ def updateNick(id,nickname):
         return -1
     finally:
         con.close() 
+
+
+
+
+# Регистрация пользователя
 
 def insertUser(email,password,nick):
     try:
@@ -161,5 +175,61 @@ def insertUser(email,password,nick):
         con.close() 
 
 
+# Get Types from "Types"
+def getLinkTypes():
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        types = cursor.execute(""" SELECT *  FROM "types" """).fetchall()
+        return types
+    except sqlite3.Error:
+        print("Err table insert")
+    finally:
+        con.close()
+
+
+
+# Insert into links
+def insertLink(userid,normal,short,count,type):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        cursor.execute(""" INSERT INTO "links" (user_id,normal,short,count,typelink_id) VALUES (?,?,?,?,?)
+        """,(userid,normal,short,count,type))
+        con.commit()
+    except sqlite3.Error:
+        print("Err table insert")
+    finally:
+        con.close()
+
+
+#Выдать ссылки пользователя по id
+
+def getLinkByUserId(userid):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        GetLinks = cursor.execute(""" SELECT * FROM "links" where "user_id"=?  """,(userid,)).fetchall()
+        return GetLinks
+    except sqlite3.Error:
+        print("Err table select")
+    finally:
+        con.close()   
+	
+
+# Проверить существует ли уже ссылка у пользователя
+def hasAlreadyLink(userid,url):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        GetLinks = cursor.execute(""" SELECT * FROM "links" where "user_id"=? and "normal"=? """,(userid,url)).fetchall()
+        if len(GetLinks)>0:
+            return False
+        else:
+            return True
+    except sqlite3.Error:
+        print("Err table select")
+    finally:
+        con.close() 
 
 

@@ -85,13 +85,7 @@ a{
 }
 
 #myInput{
-    background: none;
-    border: none;
-    color: aliceblue;
-    font-size: 20px;
-    font-family: 'Courier New', Courier, monospace;
-    color: white;
-    text-shadow: 0 2px 5px black;
+    display: none;
 }
 
 .links{

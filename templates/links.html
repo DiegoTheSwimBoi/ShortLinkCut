@@ -11,30 +11,35 @@
 <body>
 <div id="center">
 <div>
-            <h2>Введите ссылку:</h2>
-            <form method="post">
-                <div id="form">
-                <div class="input"><label>URL:<input type="text" name="url" required></label> <button>OK</button></div>
-                <br/>
-                <div class="radio">
-                {% for i in range(0,len)%}
-                <label><input type="radio" name="type" value="{{types[i][0]}}" required> {{types[i][1]}} </label>
-                {%endfor%}
-                </div>
-            </div>
-            </form>
+            <h2>Ваши ссылки</h2>
 </div>
 </div>
-
+{% if links %}
 <div class="links">
-    {% if link %}
-            <div class="links-item"><input type="text" value={{res}} id="myInput"><button onclick="myFunction()" id="btnLink">{{link}}</button></div>
-    {% endif %}
-    {% if errors %}
-    <div class="links-item"><p style="text-decoration: underline; font-size: 24px; ">{{errors}}</p></div>
-    {% endif %}
-        </div>
+    <table border="2">
+    <td>Ссылка</td>
+    <td>Сокращенная</td>
+    <td>Кол-во переходов</td>
+    <td>Тип ссылки</td>
+    {% for i in range(0,len)%}
+    <tr>
+        <td>{{links[i][2]}}</td>
+        <td>{{links[i][3]}}</td>
+        <td>{{links[i][4]}}</td>
+        <td>
+            {% if links[i][5] in types[1] %}
+            {{types[1][1]}}
+            {%endif%}
 
+            {% if links[i][5] in types[0] %}
+            {{types[0][1]}}
+            {%endif%}
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+        </div>
+{% endif %}
 <script>
 function myFunction() {
     var copyText = document.getElementById("myInput");

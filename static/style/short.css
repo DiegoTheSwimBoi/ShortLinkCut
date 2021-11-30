@@ -1,0 +1,98 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: url(../back3.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    text-shadow: 0 2px 5px black;
+}
+
+#center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 300px;
+}
+
+#form{
+    display: flex;
+    flex-direction: column;
+}
+
+
+h2{
+    text-align: center;
+}
+
+.input{
+    width: 150%;
+}
+.input,.input>label>input,.input>button{
+font-size: 32px;
+}
+
+.input>button{
+   background: linear-gradient(45deg,rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.5));
+   color: white;
+   padding: 0.5px;
+}
+
+.input>label>input{
+    width: 75%;
+    border: none;
+    border-bottom: 5px solid rgba(255, 255, 255,0.64);  
+    background: none;
+}
+
+.radio{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.links{
+    display:flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#myInput{
+    display: none;
+}
+
+.links{
+    margin-top: 30px;
+}
+
+.links>a{
+    text-decoration: underline;
+    font-weight:700;
+    color: white;
+    font-size: 28px;
+}
+
+.links-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#btnLink{
+    background: none;
+    border: none;
+    color: #fff;
+    text-shadow: 0 2px 5px black;
+    font-size: 28px;
+    text-decoration: underline;
+    transition: all ease-in-out 0.5s;
+}
+
+#btnLink:hover{
+    color: rgb(255, 208, 79)
+}

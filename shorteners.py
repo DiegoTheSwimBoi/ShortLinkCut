@@ -1,5 +1,6 @@
 import pyshorteners
 
+
 def getShortURL(url):
     try:
         x = pyshorteners.Shortener()
@@ -8,5 +9,6 @@ def getShortURL(url):
         return short
     except:
         return False
+
 
 
