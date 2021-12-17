@@ -4,7 +4,7 @@
 }
 
 body{
-    background: url(../back2.png);
+    background: rgb(83, 172, 255);
     background-repeat: no-repeat;
     font-family: 'Courier New', Courier, monospace;
     color: white;
@@ -66,4 +66,10 @@ button{
 .links>a{
     text-decoration: underline;
     font-weight:700;
+}
+
+.exit{
+    position: fixed;
+    top:0;
+    right:20px;
 }

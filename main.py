@@ -57,7 +57,8 @@ def auth():
         email = request.form.get('email')
         password = request.form.get('password')
         hasUser= bd.selectUser(email,password)
-        if int(hasUser)>0:
+        print(hasUser)
+        if hasUser:
             session["auth"]=True
             session["id"]=bd.selectUserID(email)
             return redirect(url_for("DeskPage"))
@@ -94,9 +95,12 @@ def regin():
         password = werkzeug.security.generate_password_hash(password_v, method='pbkdf2:sha256', salt_length=16)
         insertUser= bd.insertUser(email,password," ")
         print(insertUser)
-        if insertUser>0:
+        if insertUser:
             session["auth"]=True
             return redirect(url_for("DeskPage"))
+        else:
+            ReginErr="Пользователь с такой почтой уже есть в сети."
+            return render_template('regin.html',email="",password="",error=ReginErr)
     else:
         ReginErr="Простите. Но произошла ошибка."
         return render_template('regin.html',email="",password="",error=ReginErr)
@@ -148,6 +152,7 @@ def DeskPage():
         return redirect(url_for("AuthPage"))
     
 
+
  
 
 @app.route('/shortlink')
@@ -166,24 +171,29 @@ def Page():
     shorty=""
     resText=""
     error=""
+    name=bd.getUserName(session["id"])
     types=bd.getLinkTypes()
     if request.method == 'POST':
         a = request.form.get('url')
         type = request.form.get('type')
-
-        print(type)
+        save = request.form.get('isSave')
             
         url=str(a).replace(" ","")
         if len(url)>8:
             resp=shortURL.getShortURL(url)
             if resp:
-                shorty= f"{resp}"
-                resText=f"{resp}" 
-                if bd.hasAlreadyLink(session["id"],url):               
+                shorty=resp
+                if not bd.hasAlreadyLink(session["id"],url) and save:               
                     bd.insertLink(session["id"],url,shorty,0,type)
-                if type=="1":
-                    shorty=bytes(range(5))
-                    resText=f"{resp}"
+                    getlink=bd.hasAlreadyLink(session["id"],url)
+                    #print(private)
+                    Links=f"http://127.0.0.1:5002/checker/{getlink[0][0]}"
+                    shorty=shortURL.getShortURL(Links)
+                    resText=shorty
+                    shorty=shorty+f":{name}"
+                else:
+                    shorty=shortURL.getShortURL(f"http://127.0.0.1:5002/checkerNotSaved/{resp[-8:]}+{type}")
+                    resText=shorty
             else: error="К сожалению произошла ошибка. И ссылку не удалось отработать"
         else: error="Ссылка очень маленькая. Она должна быть больше 8 символов"
     return render_template("short.html",len=len(types), types=types,res=resText,link=shorty,errors=error)
@@ -191,14 +201,106 @@ def Page():
 
 @app.route('/links')
 def LinksPage():
+    name=bd.getUserName(session["id"])
+    fakelink=[]
     if "auth" in session and session["auth"]:
         types=bd.getLinkTypes()
         links=bd.getLinkByUserId(session["id"])
-        return render_template("links.html",len=len(links),links=links,types=types)
+        if len(links)>0:
+            for i in range(len(links)):
+                fakelink.append(shortURL.getShortURL(f"http://127.0.0.1:5002/checker/{links[i][0]}"))
+            return render_template("links.html",len=len(links),linkname=fakelink,links=links,types=types,name=name)
+        else: 
+            return redirect(url_for('DeskPage'))
     else:
         return redirect(url_for("AuthPage"))
 
 
+@app.route('/links', methods=['POST'])
+def DeleteLink():
+    if "auth" in session and session["auth"]:
+        if request.method == 'POST':
+            id = request.form.get('id')
+            bd.deleteLink(id,session["id"])
+            return redirect(url_for('LinksPage'))
+    else:
+        return redirect(url_for("AuthPage"))
+
+
+@app.route('/checker/<int:id>')
+def SavedLinks(id):
+    link=bd.getLinkById(id)
+    print(link)
+    if link[0]==1 or link[0]==3:
+        if "auth" in session and session["auth"]:
+            count=int(link[2])+1
+            bd.updateLinkCountStatus(id,count)
+            return redirect(link[1])
+        else:
+            return redirect(url_for("AuthPage"))
+    elif link[0]==2:
+        count=int(link[2])+1
+        bd.updateLinkCountStatus(id,count)
+        return redirect(link[1])
+
+@app.route('/checkerNotSaved/<string>')
+def notSavedLinks(string):
+    int = string[9]
+    link=f"https://tinyurl.com/{string[0:8]}"
+    if int=='1' or int=='3':
+        if "auth" in session and session["auth"]:
+            return redirect(link)
+        else:
+            return redirect(url_for("AuthPage"))
+    else:
+        return redirect(link)
+
+@app.route('/edit/<id>')
+def EditLinkPage(id):
+    if "auth" in session and session["auth"] and bd.getLinkByUserId(session["id"]):
+        types=bd.getLinkTypes()
+        link=bd.getLinkById(id)
+        return render_template("edit.html",len=len(types),original=link[3],types=types,res=None,link=None,errors=None)
+    else:
+        return redirect(url_for("Out"))
+
+		
+@app.route('/edit/<id>', methods=['POST'])
+def EditLink(id):
+    shorty=""
+    resText=""
+    error=""
+    name=bd.getUserName(session["id"])
+    types=bd.getLinkTypes()
+    if request.method == 'POST':
+        a = request.form.get('url')
+        type = request.form.get('type')
+            
+        url=str(a).replace(" ","")
+        if len(url)>8:
+            resp=shortURL.getShortURL(url)
+            print(url)
+            if resp:
+                shorty=resp
+                               
+                bd.updateLink(id,url,shorty,type,0)
+                Links=f"http://127.0.0.1:5002/checker/{id}"
+                shorty=shortURL.getShortURL(Links)
+                resText=shorty
+                shorty=shorty+f":{name}"
+                link=bd.getLinkById(id)
+                print(link)
+            else: error="К сожалению произошла ошибка. И ссылку не удалось отработать"
+        else: error="Ссылка очень маленькая. Она должна быть больше 8 символов"
+    return render_template("edit.html",len=len(types), types=types,res=resText,link=shorty,errors=error)
+
+
+
+
+@app.route('/out')
+def Out():
+    session.clear()
+    return redirect(url_for("hello_world"))
 
 
 if __name__=="__main__":       

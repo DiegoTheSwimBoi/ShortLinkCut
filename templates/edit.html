@@ -14,19 +14,14 @@
             <h2>Введите ссылку:</h2>
             <form method="post">
                 <div id="form">
-                <div class="input"><label>URL:<input type="text" name="url" required></label> <button>OK</button></div>
+                <div class="input"><label>URL:<input type="text" name="url" required value="{{original}}"></label> <button>OK</button></div>
                 <br/>
             <div class="links">
                 <div class="radio">
                 {% for i in range(0,len)%}
-                <label><input type="radio" name="type" value="{{types[i][0]}}" required> {{types[i][1]}} </label>
+                <label><input type="radio" name="type" value="{{types[i][0]}}" required > {{types[i][1]}} </label>
                 {%endfor%}
                 </div>
-                </div>
-            </div>
-            <div class="links">
-                <div class="radio">
-                    <label><input type="checkbox" name="isSave" value="True" title="Сохраните ссылку, дважды ссылки"> Сохранить ссылку?</label>
                 </div>
             </div>
             </form>

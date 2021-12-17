@@ -9,24 +9,27 @@
     <title>ShortCut Link</title>
 </head>
 <body>
-<div id="center">
+
 <div>
-            <h2>Ваши ссылки</h2>
-</div>
+    <h1>Ваши ссылки</h1>
 </div>
 {% if links %}
 <div class="links">
-    <table border="2">
-    <td>Ссылка</td>
-    <td>Сокращенная</td>
-    <td>Кол-во переходов</td>
-    <td>Тип ссылки</td>
+    <div class="column">
     {% for i in range(0,len)%}
-    <tr>
-        <td>{{links[i][2]}}</td>
-        <td>{{links[i][3]}}</td>
-        <td>{{links[i][4]}}</td>
-        <td>
+    <div>
+        <div class="rows">
+        <p>{{i+1}} - {{linkname[i]}}:{{name}}</p>
+        <div class="links-item"><input type="text" value={{linkname[i]}} id="myInput"><button onclick="myFunction()" class="delete" id="Copy">📁</button></div>
+        <a href="/edit/{{links[i][0]}}" class="edit">📝</a>
+        <form method="POST">
+            <input type="hidden" name="id" value="{{links[i][0]}}">
+            <button class="delete" name="delete">❌</button>
+        </form>
+    </div>
+        <div class="rows">
+            <p>Кол-во переходов: {{links[i][4]}}</p>
+            <p> Тип ссылки:
             {% if links[i][5] in types[1] %}
             {{types[1][1]}}
             {%endif%}
@@ -34,12 +37,14 @@
             {% if links[i][5] in types[0] %}
             {{types[0][1]}}
             {%endif%}
-        </td>
-    </tr>
-    {% endfor %}
-    </table>
+            </p>
         </div>
+    </div>
+    {%endfor%}
+</div>
+</div>
 {% endif %}
+
 <script>
 function myFunction() {
     var copyText = document.getElementById("myInput");
@@ -49,7 +54,7 @@ function myFunction() {
              /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyText.value);
             /* Alert the copied text */
-    alert("Copied the text: " + copyText.value);
+    alert(" Скопирована ");
 }
             
             

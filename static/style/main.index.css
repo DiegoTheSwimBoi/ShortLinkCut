@@ -4,7 +4,7 @@
 }
 
 body{
-    background: url(../skybrighter.png);
+    background: rgb(44, 44, 44);
     background-repeat: no-repeat;
     font-family: 'Courier New', Courier, monospace;
     color: white;
@@ -112,3 +112,11 @@ a{
     color: rgb(255, 208, 79)
 }
 
+
+.links{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}  

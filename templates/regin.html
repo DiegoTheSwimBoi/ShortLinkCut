@@ -24,7 +24,7 @@
         <h1>Введите логин и прпароль</h1>
         <form method="post">
             <label>E-mail: <input type="email" name="email" required value={{email}}></label><br><br>
-            <label>Пароль: <input type="password" name="password" required value={{password}}></label><br><br>
+            <label>Пароль: <input type="password" minlength="6" name="password" required value={{password}} ></label><br><br>
             <button>Ok</button>
         </form>
         <h1>{{error}}</h1> 

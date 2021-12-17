@@ -63,7 +63,7 @@ try:
     con = sqlite3.connect('database.db')
     cursor=con.cursor()
     types = cursor.execute(""" SELECT "type"  FROM "types" """).fetchall()
-    types_link=['private','public']
+    types_link=['private','public','personal']
     #print(types)
     if not types:
         for i in range(len(types_link)):
@@ -103,14 +103,18 @@ def selectUser(email,password):
         cursor=con.cursor()
 
         GetPassword=cursor.execute(""" SELECT "password" FROM "users" where "email"=? """,(email,)).fetchone()
-        print(werkzeug.security.check_password_hash(GetPassword[0], password))
-        if (werkzeug.security.check_password_hash(GetPassword[0], password)):
-            return 1
-        else:
-            return -1       
+        
+        if GetPassword!=None:
+        
+            #print(werkzeug.security.check_password_hash(GetPassword[0], password))
+            if (werkzeug.security.check_password_hash(GetPassword[0], password)):
+                return True
+            else:
+                return False
+        else: return False      
     except sqlite3.Error:
         print("No")
-        return -2
+        return False
     finally:
         con.close() 
 
@@ -166,11 +170,11 @@ def insertUser(email,password,nick):
             cursor.execute(""" INSERT INTO "users" (email,password,nickname) VALUES (?,?,?)
             """,(email,password,nick))
             con.commit()
-            return 1
+            return True
         else:
-            return -1
+            return False
     except sqlite3.Error:
-        return -2
+        return False
     finally:
         con.close() 
 
@@ -224,12 +228,58 @@ def hasAlreadyLink(userid,url):
         cursor=con.cursor()
         GetLinks = cursor.execute(""" SELECT * FROM "links" where "user_id"=? and "normal"=? """,(userid,url)).fetchall()
         if len(GetLinks)>0:
-            return False
+            return GetLinks
         else:
-            return True
+            return False
     except sqlite3.Error:
         print("Err table select")
     finally:
         con.close() 
+
+
+
+def deleteLink(id,userid):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        cursor.execute(""" DELETE  FROM "links" where "user_id"=? and "id"=? """,(userid,id))
+        con.commit()
+    finally:
+        con.close() 
+
+
+def getLinkById(id):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        GetLinks = cursor.execute(""" SELECT "typelink_id","short","count","normal" FROM "links" where "id"=? """,(id,)).fetchone()
+        return GetLinks
+    except sqlite3.Error:
+        print("Err table select")
+    finally:
+        con.close() 
+
+
+def updateLinkCountStatus(id,count):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        cursor.execute(""" UPDATE "links" SET "count"=? where "id"=? """,(count,id))
+        con.commit()
+    except sqlite3.Error:
+        print("Err table select")
+    finally:
+        con.close()  
+
+
+def updateLink(id,url,short,type,count):
+    try:
+        con = sqlite3.connect('database.db')
+        cursor=con.cursor()
+        cursor.execute(""" UPDATE "links" SET normal=?,short=?,count=?,typelink_id=?  WHERE "id"=? """,(url,short,count,type,id))
+        con.commit()
+        print("Edited")
+    finally:
+        con.close()    
 
 

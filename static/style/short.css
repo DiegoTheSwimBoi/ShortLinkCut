@@ -4,7 +4,7 @@
 }
 
 body{
-    background: url(../back3.png);
+    background: lightskyblue;
     background-size: 100%;
     background-repeat: no-repeat;
     font-family: 'Courier New', Courier, monospace;
@@ -25,7 +25,7 @@ body{
 }
 
 
-h2{
+h1{
     text-align: center;
 }
 
@@ -51,8 +51,7 @@ font-size: 32px;
 
 .radio{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
     gap: 20px;
 }
 
@@ -77,6 +76,13 @@ font-size: 32px;
     font-size: 28px;
 }
 
+.edit{
+    text-decoration: none;
+    font-weight:700;
+    color: white;
+    font-size: 25px;
+}
+
 .links-item{
     display: flex;
     flex-direction: row;
@@ -96,3 +102,41 @@ font-size: 32px;
 #btnLink:hover{
     color: rgb(255, 208, 79)
 }
+
+
+.links{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}  
+
+.column{
+    flex-direction: column;
+}
+
+.column>div{
+    margin-top: 20px;
+}
+
+
+
+.links>div{
+    font-size: 26px;
+}
+
+.rows{
+    display:flex;
+    justify-content: space-around;
+    gap:60px;
+}
+
+.delete{
+    border: none;
+    background: none;
+    color: white;
+    text-shadow: 0 2px 5px black;
+    font-size: large;
+}
+
