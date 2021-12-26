@@ -230,7 +230,6 @@ def DeleteLink():
 @app.route('/checker/<int:id>')
 def SavedLinks(id):
     link=bd.getLinkById(id)
-    print(link)
     if link[0]==1 or link[0]==3:
         if "auth" in session and session["auth"]:
             count=int(link[2])+1
@@ -260,6 +259,7 @@ def EditLinkPage(id):
     if "auth" in session and session["auth"] and bd.getLinkByUserId(session["id"]):
         types=bd.getLinkTypes()
         link=bd.getLinkById(id)
+        print(bd.getLinkById(id))
         return render_template("edit.html",len=len(types),original=link[3],types=types,res=None,link=None,errors=None)
     else:
         return redirect(url_for("Out"))
@@ -270,20 +270,27 @@ def EditLink(id):
     shorty=""
     resText=""
     error=""
+    count=0
     name=bd.getUserName(session["id"])
     types=bd.getLinkTypes()
     if request.method == 'POST':
         a = request.form.get('url')
         type = request.form.get('type')
+
+        
             
         url=str(a).replace(" ","")
+
+        if  bd.hasAlreadyLink(session["id"],url):
+            count=int(bd.getLinkById(id)[2])
+
         if len(url)>8:
             resp=shortURL.getShortURL(url)
             print(url)
             if resp:
                 shorty=resp
                                
-                bd.updateLink(id,url,shorty,type,0)
+                bd.updateLink(id,url,shorty,type,count)
                 Links=f"http://127.0.0.1:5002/checker/{id}"
                 shorty=shortURL.getShortURL(Links)
                 resText=shorty

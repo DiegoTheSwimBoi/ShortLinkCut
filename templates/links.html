@@ -12,11 +12,13 @@
 
 <div>
     <h1>Ваши ссылки</h1>
+    <div class="links"><a href="/desktop">Вернуться</a></div>
 </div>
 {% if links %}
 <div class="links">
     <div class="column">
     {% for i in range(0,len)%}
+    {% if linkname[i]!=False %}
     <div>
         <div class="rows">
         <p>{{i+1}} - {{linkname[i]}}:{{name}}</p>
@@ -26,6 +28,7 @@
             <input type="hidden" name="id" value="{{links[i][0]}}">
             <button class="delete" name="delete">❌</button>
         </form>
+        
     </div>
         <div class="rows">
             <p>Кол-во переходов: {{links[i][4]}}</p>
@@ -40,6 +43,9 @@
             </p>
         </div>
     </div>
+    {% else %}
+    <div><p>Простите, произошла ошибка. Пожалуйста обновите страницу 😭</p></div>
+    {% endif %}
     {%endfor%}
 </div>
 </div>
@@ -60,7 +66,7 @@ function myFunction() {
             
 </script>
 
-<div class="links"><a href="/desktop">Вернуться</a></div>
+
 
 
 </body>
