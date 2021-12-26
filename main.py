@@ -12,15 +12,24 @@ app = Flask(__name__,template_folder='templates')
 app.secret_key="session_start"
 @app.route("/")
 def hello_world():
-    return render_template("index.html")
+    auth=False
+    if "id" in session and "auth":
+        auth=True
+    return render_template("index.html",auth=auth)
 
 @app.route("/protoShort")
 def ProtoPage():
-    return render_template("proto.html")
+    auth=False
+    if "id" in session and "auth":
+        auth=True
+    return render_template("proto.html",auth=auth)
 
 @app.route('/protoShort', methods=['POST'])
 def proto():
     shorty=""
+    auth=False
+    if "id" in session and "auth":
+        auth=True
     if request.method == 'POST':
             a = request.form.get('url')
             url=str(a).replace(" ","")
@@ -31,7 +40,7 @@ def proto():
                 else: shorty="К сожалению произошла ошибка. И ссылку не удалось отработать"
             else: shorty="Ссылка очень маленькая. Она должна быть больше 8 символов"
             
-    return render_template("proto.html",link=shorty)
+    return render_template("proto.html",link=shorty,auth=auth)
     
 
 
@@ -110,7 +119,10 @@ def regin():
 
 @app.route("/answer")
 def AnswerPage():
-    return render_template("answer.html")
+    auth=False
+    if "id" in session and "auth":
+        auth=True
+    return render_template("answer.html",auth=auth)
 
 
 @app.route('/seetings')
@@ -259,8 +271,14 @@ def EditLinkPage(id):
     if "auth" in session and session["auth"] and bd.getLinkByUserId(session["id"]):
         types=bd.getLinkTypes()
         link=bd.getLinkById(id)
+        checked=[]
+        for i in range(len(types)):
+            if link[0]== types[i][0]:
+                checked.append("checked")
+            else: checked.append("")
+
         print(bd.getLinkById(id))
-        return render_template("edit.html",len=len(types),original=link[3],types=types,res=None,link=None,errors=None)
+        return render_template("edit.html",len=len(types),original=link,checked=checked,types=types,res=None,link=None,errors=None)
     else:
         return redirect(url_for("Out"))
 
@@ -271,6 +289,7 @@ def EditLink(id):
     resText=""
     error=""
     count=0
+    checked=[]
     name=bd.getUserName(session["id"])
     types=bd.getLinkTypes()
     if request.method == 'POST':
@@ -296,10 +315,14 @@ def EditLink(id):
                 resText=shorty
                 shorty=shorty+f":{name}"
                 link=bd.getLinkById(id)
-                print(link)
+                for i in range(len(types)):
+                    if link[0]== types[i][0]:
+                        checked.append("checked")
+                    else: checked.append(" ")
+                
             else: error="К сожалению произошла ошибка. И ссылку не удалось отработать"
         else: error="Ссылка очень маленькая. Она должна быть больше 8 символов"
-    return render_template("edit.html",len=len(types), types=types,res=resText,link=shorty,errors=error)
+    return render_template("edit.html",len=len(types),checked=checked,types=types,res=resText,link=shorty,errors=error)
 
 
 

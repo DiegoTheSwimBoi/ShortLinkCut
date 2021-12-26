@@ -14,12 +14,12 @@
             <h2>Введите ссылку:</h2>
             <form method="post">
                 <div id="form">
-                <div class="input"><label>URL:<input type="text" name="url" required value="{{original}}"></label> <button>OK</button></div>
+                <div class="input"><label>URL:<input type="text" name="url" required value="{{original[3]}}"></label> <button>OK</button></div>
                 <br/>
             <div class="links">
                 <div class="radio">
                 {% for i in range(0,len)%}
-                <label><input type="radio" name="type" value="{{types[i][0]}}" required > {{types[i][1]}} </label>
+                <label><input type="radio" name="type" value="{{types[i][0]}}" required {{checked[i]}}> {{types[i][1]}} </label>
                 {%endfor%}
                 </div>
                 </div>
@@ -67,8 +67,8 @@ function myFunction() {
             
             
 </script>
-
-<div class="links"><a href="/desktop">Вернуться</a></div>
+<div class="links"><a href="/links">Вернуться</a></div>
+<div class="links"><a href="/desktop">Вернуться на главную</a></div>
 
 
  

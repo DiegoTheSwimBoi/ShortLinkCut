@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">
-    <link type="text/css"  rel="stylesheet" href="{{url_for('static', filename='style/main.index.css')}}">
-    <link type="text/css"  rel="stylesheet" href="{{url_for('static', filename='style/block.css')}}">
-    <title>ShortCut Link</title>
-</head>
-<body>
-    <div class="header">
-        <div class="header-items">
-        <a href="/">Home</a>
-        <a href="/enter">Auth</a>
-        <a href="/answer">Q&A</a>
-        </div>
-    </div>
+
+    {%extends "menu.html"%}
+    {% block content %}
     <div class="answer">
     <h1>Q&A</h1>
     </div>
@@ -27,8 +11,4 @@
         <p>Q: "Вопросы закончились?"</p> - <p>A: "Да"</p>
         </section>
     </div>
-{% if resp %}        
-{{resp}}
-{% endif %}
-</body>
-</html>
+    {% endblock %}

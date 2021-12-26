@@ -32,14 +32,9 @@
     </div>
         <div class="rows">
             <p>Кол-во переходов: {{links[i][4]}}</p>
-            <p> Тип ссылки:
-            {% if links[i][5] in types[1] %}
-            {{types[1][1]}}
-            {%endif%}
-
-            {% if links[i][5] in types[0] %}
-            {{types[0][1]}}
-            {%endif%}
+            <p> Тип ссылки: 
+                {% set index = links[i][5]%}
+                {{types[index-1][1]}}
             </p>
         </div>
     </div>
