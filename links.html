@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link type="text/css"  rel="stylesheet" href="{{url_for('static', filename='style/short.css')}}">
+    <title>ShortCut Link</title>
+</head>
+<body>
+
+<div>
+    <h1>Ваши ссылки</h1>
+    <div class="links"><a href="/desktop">Вернуться</a></div>
+</div>
+{% if links %}
+<div class="links">
+    <div class="column">
+    {% for i in range(0,len)%}
+    {% if linkname[i]!=False %}
+    <div>
+        <div class="rows">
+        <p>{{i+1}} - {{linkname[i]}}:{{name}}</p>
+        <div class="links-item"><input type="text" value={{linkname[i]}} id="myInput" class="myInput{{i+1}}"><button onclick="myFunction({{i+1}})" class="delete" id="Copy">📁</button></div>
+        <a href="/edit/{{links[i][0]}}" class="edit">📝</a>
+        <form method="POST">
+            <input type="hidden" name="id" value="{{links[i][0]}}">
+            <button class="delete" name="delete">❌</button>
+        </form>
+        
+    </div>
+        <div class="rows">
+            <p>Кол-во переходов: {{links[i][4]}}</p>
+            <p> Тип ссылки: 
+                {% set index = links[i][5]%}
+                {{types[index-1][1]}}
+            </p>
+        </div>
+    </div>
+    {% else %}
+    <div><p>Простите, произошла ошибка. Пожалуйста обновите страницу 😭</p></div>
+    {% endif %}
+    {%endfor%}
+</div>
+</div>
+{% endif %}
+
+<script>
+function myFunction(id) {
+    console.log(id)
+    navigator.clipboard.writeText(" ");
+    myInput=`.myInput${id}`
+    var copyText = document.querySelector(myInput);
+            /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+             /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyText.value);
+            /* Alert the copied text */
+    alert(" Скопирована ");
+}
+            
+            
+</script>
+
+
+
+
+</body>
+</html>

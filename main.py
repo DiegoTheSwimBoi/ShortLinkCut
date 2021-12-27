@@ -242,6 +242,7 @@ def DeleteLink():
 @app.route('/checker/<int:id>')
 def SavedLinks(id):
     link=bd.getLinkById(id)
+    print(link)
     if link[0]==1 or link[0]==3:
         if "auth" in session and session["auth"]:
             count=int(link[2])+1
@@ -256,9 +257,9 @@ def SavedLinks(id):
 
 @app.route('/checkerNotSaved/<string>')
 def notSavedLinks(string):
-    int = string[9]
+    inter = int(string[9])
     link=f"https://tinyurl.com/{string[0:8]}"
-    if int=='1' or int=='3':
+    if inter==1 or inter==3:
         if "auth" in session and session["auth"]:
             return redirect(link)
         else:
@@ -322,7 +323,7 @@ def EditLink(id):
                 
             else: error="К сожалению произошла ошибка. И ссылку не удалось отработать"
         else: error="Ссылка очень маленькая. Она должна быть больше 8 символов"
-    return render_template("edit.html",len=len(types),checked=checked,types=types,res=resText,link=shorty,errors=error)
+    return render_template("edit.html",len=len(types),original=url,checked=checked,types=types,res=resText,link=shorty,errors=error)
 
 
 
