@@ -279,7 +279,7 @@ def EditLinkPage(id):
             else: checked.append("")
 
         print(bd.getLinkById(id))
-        return render_template("edit.html",len=len(types),original=link,checked=checked,types=types,res=None,link=None,errors=None)
+        return render_template("edit.html",len=len(types),original=link[3],checked=checked,types=types,res=None,link=None,errors=None)
     else:
         return redirect(url_for("Out"))
 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link type="text/css"  rel="stylesheet" href="{{url_for('static', filename='style/short.css')}}">
+    <title>ShortCut Link</title>
+</head>
+<body>
+<div id="center">
+<div>
+            <h2>Введите ссылку:</h2>
+            <form method="post">
+                <div id="form">
+                <div class="input"><label>URL:<input type="text" name="url" required value="{{original}}"></label> <button>OK</button></div>
+                <br/>
+            <div class="links">
+                <div class="radio">
+                {% for i in range(0,len)%}
+                <label><input type="radio" name="type" value="{{types[i][0]}}" required {{checked[i]}}> {{types[i][1]}} </label>
+                {%endfor%}
+                </div>
+                </div>
+            </div>
+            </form>
+</div>
+</div>
+
+<div class="links">
+    {% if link %}
+            <div class="links-item"><input type="text" value={{res}} id="myInput"><button onclick="myFunction()" id="btnLink">{{link}}</button></div>
+    {% endif %}
+    {% if errors %}
+    <div class="links-item"><p style="text-decoration: underline; font-size: 24px; ">{{errors}}</p></div>
+    {% endif %}
+        </div>
+
+<script>
+
+document.onkeydown = function(e) {
+if(event.keyCode == 123) {
+return false;
+}
+if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+return false;
+}
+if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+return false;
+}
+if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+return false;
+}
+}
+function myFunction() {
+
+    var copyText = document.getElementById("myInput");
+            /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+             /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyText.value);
+            /* Alert the copied text */
+    alert(" Скопирован ");
+}
+            
+            
+</script>
+<div class="links"><a href="/links">Вернуться</a></div>
+<div class="links"><a href="/desktop">Вернуться на главную</a></div>
+
+
+ 
+
+</body>
+</html>
